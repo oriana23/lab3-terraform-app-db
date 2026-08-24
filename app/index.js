@@ -5,14 +5,14 @@ const notasRouter = require('./src/routes/notas');
    
 const app = express();
 const PORT = process.env.PORT || 3000;
-    
+
 // Middleware
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-  
+
 // Serve static files (CSS, JS)
 app.use(express.static(path.join(__dirname, 'public')));
- 
+
 // Routes
 app.use('/', notasRouter);
 
