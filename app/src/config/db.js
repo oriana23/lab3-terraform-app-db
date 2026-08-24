@@ -1,11 +1,11 @@
 const mysql = require('mysql2/promise');
 
-// Configuración de conexión usando las mismas variables de entorno que MySQL
+// Configuración de conexión — variables inyectadas por la task definition de ECS
 const dbConfig = {
-  host: process.env.MYSQL_HOST || 'localhost',
-  user: process.env.MYSQL_USER || 'root',
-  password: process.env.MYSQL_PASSWORD || '',
-  database: process.env.MYSQL_DATABASE || 'mi_base',
+  host: process.env.DB_HOST || 'localhost',
+  user: process.env.DB_USER || 'root',
+  password: process.env.DB_PASSWORD || '',
+  database: process.env.DB_NAME || 'mi_base',
   ssl: process.env.MYSQL_SSL === 'false' ? false : { rejectUnauthorized: false },
 };
 
