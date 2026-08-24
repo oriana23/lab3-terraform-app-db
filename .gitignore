@@ -1,0 +1,27 @@
+# Dependencias PHP (Composer)
+vendor/
+composer.lock
+
+# Variables de entorno / secretos locales
+.env
+.env.local
+
+# Artefactos generados por el build (CodeBuild los regenera en cada corrida)
+imagedefinitions.json
+build.zip
+
+# Logs
+*.log
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+
+# Editores / IDEs
+.vscode/
+.idea/
+*.swp
+
+# Docker
+.dockerignore
+docker-compose.override.yml
