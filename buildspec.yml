@@ -1,0 +1,19 @@
+version: 0.2
+env:
+  variables:
+    CONTAINER_NAME: "frontend"
+phases:
+  pre_build:
+    commands:
+      - IMAGE_TAG=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c1-7)
+      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $ECR_REPOSITORY_URI
+  build:
+    commands:
+      - docker build -t $ECR_REPOSITORY_URI:$IMAGE_TAG ./app
+      - docker push $ECR_REPOSITORY_URI:$IMAGE_TAG
+  post_build:
+    commands:
+      - printf '[{"name":"%s","imageUri":"%s"}]' "$CONTAINER_NAME" "$ECR_REPOSITORY_URI:$IMAGE_TAG" > imagedefinitions.json
+artifacts:
+  files:
+    - imagedefinitions.json
