@@ -10,8 +10,21 @@ const dbConfig = {
 };
 
 let pool;
+let ready = false;
 
 async function initDB() {
+  // Si un intento anterior fallo a mitad de camino, cerramos ese pool antes de
+  // crear uno nuevo: si no, cada reintento deja sockets colgando.
+  if (pool) {
+    try {
+      await pool.end();
+    } catch (e) {
+      // El pool ya podia estar roto; no hay nada que rescatar.
+    }
+    pool = undefined;
+  }
+
+  ready = false;
   pool = mysql.createPool(dbConfig);
 
   // Crear la tabla si no existe — with pinned and category columns
@@ -34,6 +47,7 @@ async function initDB() {
     // Columns might already exist — ignore
   }
 
+  ready = true;
   console.log('Tabla "notas" lista.');
 }
 
@@ -41,4 +55,9 @@ function getPool() {
   return pool;
 }
 
-module.exports = { dbConfig, initDB, getPool };
+// true solo cuando initDB completo, incluida la creacion de la tabla.
+function isReady() {
+  return ready;
+}
+
+module.exports = { dbConfig, initDB, getPool, isReady };

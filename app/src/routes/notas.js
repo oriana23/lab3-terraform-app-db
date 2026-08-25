@@ -1,9 +1,23 @@
 const express = require('express');
-const { getPool } = require('../config/db');
+const { getPool, isReady } = require('../config/db');
 const { CATEGORIES } = require('../helpers');
 const { renderPage } = require('../views/page');
 
 const router = express.Router();
+
+// Mientras initDB no haya terminado, getPool() devuelve undefined y cualquier
+// ruta explotaria con un TypeError opaco dentro de su catch. Cortamos antes
+// con un 503, que ademas es la respuesta correcta: es indisponibilidad
+// temporal, no un error del cliente ni un bug del servidor.
+router.use((req, res, next) => {
+  if (isReady()) return next();
+
+  res.status(503);
+  if (req.accepts('html')) {
+    return res.send('<h1>Servicio iniciando</h1><p>Conectando a la base de datos. Reintentá en unos segundos.</p>');
+  }
+  res.json({ error: 'Base de datos no disponible todavia' });
+});
 
 // Página principal: formulario + listado de notas
 router.get('/', async (req, res) => {
