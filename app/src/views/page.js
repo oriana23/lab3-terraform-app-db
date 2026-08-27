@@ -48,7 +48,7 @@ function renderPage(rows) {
       <div class="cosmos-header__left">
         <div class="cosmos-logo">
           <div class="cosmos-logo__icon">🚀</div>
-          <h1 class="cosmos-logo__text">Tera Notes</h1>
+          <h1 class="cosmos-logo__text">Santi Notes</h1>
         </div>
       </div>
       <div class="cosmos-header__right">
